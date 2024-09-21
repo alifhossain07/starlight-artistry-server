@@ -51,6 +51,14 @@ async function run() {
       res.send(item);
     });
 
+    app.delete("/craftItem/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await craftCollection.deleteOne(query);
+        res.send(result);
+      });
+  
+
     app.put("/craftItem/:id", async (req, res) => {
       const id = req.params.id;
       if (!ObjectId.isValid(id)) {
