@@ -10,6 +10,14 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json()); // This allows parsing JSON from request body
 
+app.use((req, res, next) => {
+    res.setHeader("Content-Security-Policy", "default-src 'self'; script-src 'self' https://vercel.live; img-src 'self' data: https:; connect-src 'self'; style-src 'self';");
+    next();
+});
+
+
+
+
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_USER_PASSWORD}@basicsexploring.cgr22.mongodb.net/?retryWrites=true&w=majority&appName=basicsExploring`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -28,7 +36,7 @@ async function run() {
     const craftCollection = client.db("craftDB").collection("crafts");
 
     app.get("/craftItem", async (req, res) => {
-      const cursor = craftCollection.find();
+      const cursor = await craftCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
